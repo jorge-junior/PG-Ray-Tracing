@@ -4,24 +4,23 @@
 #include "scene.h"
 #include <iostream>
 
-
-struct Ray{
-    point3 origin;
-    vec3 direction;
-};
-
-struct Sphere{
+struct Sphere
+{
     point3 center;
     float radius;
     Color color;
-    const Color& intersect(const point3& camOrigin, const Ray& rayVec, const Scene& scene) const {};
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
 };
 
-struct Plane{
+struct Plane
+{
+    point3 origin;
+    vec3 normal;
     Color color;
-    const Color& intersect(const point3& camOrigin, const Ray& rayVec, const Scene& scene) const {};
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
 };
 
-struct TriangleMesh{
-    const Color& intersect(const point3& camOrigin, const Ray& rayVec, const Scene& scene) const {};
+struct TriangleMesh
+{
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
 };

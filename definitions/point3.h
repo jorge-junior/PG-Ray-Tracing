@@ -1,6 +1,7 @@
 #include <iostream>
 
-struct point3{
+struct point3
+{
     float location[3];
-    const float& operator [] (int index) const {};
+    const float &operator[](int index) const {};
 };

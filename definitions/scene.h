@@ -1,5 +1,6 @@
 #include "color.h"
 
-struct Scene{
+struct Scene
+{
     Color backgroundColor;
 };
