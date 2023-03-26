@@ -19,17 +19,13 @@ const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, cons
         return scene.backgroundColor;
 
     // point of intersection:
-    // float t1 = -b * delta / 2a;
-    // float t = t1;
-    // if (delta > 0)
-    // {
-    //     float t2 = -b * -delta / 2a;
-    //     t = (t1 < t2) ? t1 : t2;
-    // }
-    // else if (delta < 0)
+    // if (delta < 0)
     // {
     //     return NULL;
     // }
+    // float t0 = -b - sqrt(delta) / 2a;
+    // float t1 = -b + sqrt(delta) / 2a;
+    // float t = (t0 < t1)? t0 : t1;
     // return camOrigin + rayVec * t;
 };
 
