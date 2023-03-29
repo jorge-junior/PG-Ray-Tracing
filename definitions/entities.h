@@ -2,7 +2,6 @@
 #include "point3.h"
 #include "color.h"
 #include "scene.h"
-#include <iostream>
 
 struct Sphere
 {
@@ -20,7 +19,19 @@ struct Plane
     const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
 };
 
+struct Triangle
+{
+    point3 p1;
+    point3 p2;
+    point3 p3;
+    vec3 normal;
+};
+
 struct TriangleMesh
 {
+    int nTriangles;
+    Triangle* triangles;
+    Color color;
+    const bool triangleIntersect(const vec3 &rayVec, const Triangle &triangle) const {};
     const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
 };

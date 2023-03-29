@@ -1,5 +1,3 @@
-#include <iostream>
-
 struct vec3
 {
     float direction[3];

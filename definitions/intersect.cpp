@@ -8,8 +8,8 @@
 
 const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const
 {
-    float a = vec3::dot(rayVec.direction, rayVec.direction);
-    float b = 2.0f * (vec3::dot(camOrigin, rayVec.direction) + vec3::dot(rayVec.direction, this->center));
+    float a = vec3::dot(rayVec, rayVec);
+    float b = 2.0f * (vec3::dot(camOrigin, rayVec) + vec3::dot(rayVec, this->center));
     float c = vec3::dot(camOrigin, camOrigin) + 2.0f * vec3::dot(camOrigin, this->center) + vec3::dot(this->center, this->center) - this->radius;
     float delta = b * b - 4.0f * a * c;
 
@@ -31,7 +31,7 @@ const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, cons
 
 const Color &Plane::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const
 {
-    float a = vec3::dot(rayVec.direction, this->normal);
+    float a = vec3::dot(rayVec, this->normal);
     if (a == 0)
         return scene.backgroundColor;
     else
@@ -43,4 +43,35 @@ const Color &Plane::intersect(const point3 &camOrigin, const vec3 &rayVec, const
     // return camOrigin + rayVec * t;
 };
 
-const Color &TriangleMesh::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
+const bool TriangleMesh::triangleIntersect(const vec3& rayVec, const Triangle& triangle) const {
+    float a = vec3::dot(rayVec, triangle.normal);
+    if (a == 0)
+        return false;
+    else
+        return true;
+
+    // point of intersection:
+    // float b = vec3::dot(camOrigin, this->normal) - vec3::dot(this->origin, this->normal);
+    // float t = -b / a;
+    // float[3] intersectPoint = camOrigin + rayVec * t;
+    
+    // baricentric coordinates:
+    // float[3] coordinates = findBaricentricCoordinates(intersectPoint, triangle);
+    // if (isInsideTriangle(coordinates))
+    //    return true;
+    // return false;
+};
+
+const Color &TriangleMesh::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {
+    bool intersected;
+    // Triangle* closestTriangle;
+    for (int i = 0; i < this->nTriangles; i ++) {
+        if (this->triangleIntersect(rayVec, this->triangles[i]))
+            return this->color;
+            // intersected = true;
+            // closestTriangle = this->triangles[i];
+    }
+    // if (intersected)
+    //    return this->triangles[i]->color;
+    return scene.backgroundColor;
+};
