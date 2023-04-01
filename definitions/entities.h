@@ -8,7 +8,7 @@ struct Sphere
     point3 center;
     float radius;
     Color color;
-    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const {};
 };
 
 struct Plane
@@ -16,7 +16,7 @@ struct Plane
     point3 origin;
     vec3 normal;
     Color color;
-    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const {};
 };
 
 struct Triangle
@@ -25,13 +25,15 @@ struct Triangle
     point3 p2;
     point3 p3;
     vec3 normal;
+
+    const point3 &operator[](int index) const {};
 };
 
 struct TriangleMesh
 {
     int nTriangles;
-    Triangle* triangles;
+    Triangle *triangles;
     Color color;
-    const bool triangleIntersect(const vec3 &rayVec, const Triangle &triangle) const {};
-    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene) const {};
+    const bool triangleIntersect(const point3 &rayOrigin, const vec3 &rayVec, const Triangle &t, point3 &outIntersectionPoint) const {};
+    const Color &intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const {};
 };
