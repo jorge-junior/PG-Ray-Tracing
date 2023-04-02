@@ -1,5 +1,4 @@
-#include "vec3.h"
-#include "point3.h"
+#include "primitives.h"
 #include "color.h"
 #include "scene.h"
 
