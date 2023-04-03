@@ -1,5 +1,5 @@
 #include "entities.h"
-#include <math.h>
+#include <cmath>
 
 /*
     Intersections
@@ -7,15 +7,15 @@
 
 // all classes are currently defined in stubs (this will be solved when merging the implementation of the group)
 
-const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const
+const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, float &t) const
 {
     /* Calculate the intersection point of a ray with a sphere. Returns the color of the sphere if intersected */
 
     // calculate discriminant
 
     float a = vec3::dot(rayVec, rayVec);
-    float b = 2.0f * (vec3::dot(camOrigin, rayVec) + vec3::dot(rayVec, this->center));
-    float c = vec3::dot(camOrigin, camOrigin) + 2.0f * vec3::dot(camOrigin, this->center) + vec3::dot(this->center, this->center) - this->radius;
+    float b = 2.0f * vec3::dot((camOrigin + this->center), rayVec);
+    float c = vec3::dot(camOrigin, this->center) * vec3::dot(camOrigin, this->center) - this->radius * this->radius;
     float delta = b * b - 4.0f * a * c;
 
     if (delta < 0.0f) // no intersection
@@ -23,15 +23,17 @@ const Color &Sphere::intersect(const point3 &camOrigin, const vec3 &rayVec, cons
 
     // intersection point
 
-    float t0 = -b - sqrt(delta) / 2 * a;
-    float t1 = -b + sqrt(delta) / 2 * a;
-    float t = (t0 < t1) ? t0 : t1;
-    outIntersectionPoint = camOrigin + (rayVec * t);
+    float t0 = (-b - sqrt(delta)) / (2 * a);
+    float t1 = (-b + sqrt(delta)) / (2 * a);
+    float _t = (t0 < t1) ? t0 : t1;
+
+    if (_t < 1)
+        t = _t;
 
     return this->color;
 };
 
-const Color &Plane::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const
+const Color &Plane::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, float &t) const
 {
     /* Calculate the intersection point of a ray with a plane. Returns the color of the plane if intersected */
 
@@ -45,16 +47,16 @@ const Color &Plane::intersect(const point3 &camOrigin, const vec3 &rayVec, const
 
     // calculate intersection point
 
-    float t = vec3::dot((this->origin - camOrigin), normal) / a;
-    if (t > EPSILON) // intersect
+    float _t = vec3::dot((this->origin - camOrigin), normal) / a;
+    if (_t > EPSILON) // intersect
     {
-        outIntersectionPoint = camOrigin + t * rayVec;
+        t = _t;
         return this->color;
     }
     return scene.backgroundColor; // no intersection
 };
 
-const bool TriangleMesh::triangleIntersect(const point3 &rayOrigin, const vec3 &rayVec, const Triangle &tri, point3 &outIntersectionPoint) const
+const bool Triangle::intersect(const point3 &rayOrigin, const vec3 &rayVec, float &t) const
 {
     /* Uses Moller-Trumbore intersection algorithm to chek intersection of a ray with a triangle */
 
@@ -62,8 +64,8 @@ const bool TriangleMesh::triangleIntersect(const point3 &rayOrigin, const vec3 &
 
     // triangle edge vectors
 
-    vec3 edge1 = tri[1] - tri[0];
-    vec3 edge2 = tri[2] - tri[0];
+    vec3 edge1 = this->p2 - this->p1;
+    vec3 edge2 = this->p3 - this->p1;
     vec3 h = vec3::cross(rayVec, edge2);
 
     // check if ray is parallel
@@ -75,7 +77,7 @@ const bool TriangleMesh::triangleIntersect(const point3 &rayOrigin, const vec3 &
     // find beta coordinate
 
     float f = 1.0 / a;
-    vec3 s = rayOrigin - tri[0];
+    vec3 s = rayOrigin - this->p1;
     float beta = f * vec3::dot(s, h);
     if (beta < 0.0 || beta > 1.0)
         return false; // outside triangle
@@ -89,35 +91,35 @@ const bool TriangleMesh::triangleIntersect(const point3 &rayOrigin, const vec3 &
 
     // find the intersection point
 
-    float t = f * vec3::dot(edge2, q);
-    if (t > EPSILON) // point intersection
+    float _t = f * vec3::dot(edge2, q);
+    if (_t > EPSILON) // point intersection
     {
-        outIntersectionPoint = rayOrigin + rayVec * t;
+        t = _t;
         return true;
     }
     else // line intersection
         return false;
 };
 
-const Color &TriangleMesh::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, point3 &outIntersectionPoint) const
+const Color &TriangleMesh::intersect(const point3 &camOrigin, const vec3 &rayVec, const Scene &scene, float &t) const
 {
     /* Tests intersection among all triangles in the mesh. Returns the closest intersection, if exists */
 
-    point3 intersectionPoint;
-    // Triangle* closestTriangle = nullptr;
+    float _t = -1;
+    Color c;
+
     for (int i = 0; i < this->nTriangles; i++)
     {
-        if (this->triangleIntersect(camOrigin, rayVec, this->triangles[i], intersectionPoint))
+        if ((this->triangles[i]).intersect(camOrigin, rayVec, _t))
         {
-            return this->color;
-            // if (distance(this.triangles[i]) < distance(closestTriangle))
-            // {
-            //    closestTriangle = this->triangles[i];
-            //    outIntersectionPoint = intersectionPoint;
-            // }
+            if (_t < t)
+            {
+                t = _t;
+                c = this->color;
+            }
         }
     }
-    // if (closestTriangle != nullptr)
-    //    return this->triangles[i]->color;
+    if (_t != -1)
+        return this->color;
     return scene.backgroundColor;
 };
