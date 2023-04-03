@@ -72,12 +72,12 @@ public:
 class Triangulo : public Forma
 {
 protected:
-	vector<Ponto *> vertices;
+	vector<Ponto> vertices;
 	Vec3 normal;
 	Cor cor;
 
 public:
-	Triangulo(const vector<Ponto *> &vertices, const Vec3 &normal,
+	Triangulo(const vector<Ponto> &vertices, const Vec3 &normal,
 			  const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Triangulo();

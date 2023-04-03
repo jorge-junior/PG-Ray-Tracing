@@ -1,5 +1,5 @@
 #include "Intersecoes.hpp"
-#include "Vetor.hpp"
+#include "Vetor.cpp"
 
 using namespace std;
 
@@ -162,7 +162,7 @@ bool Esfera::INTERSECTA(const Ray &ray)
 	return false;
 }
 
-Triangulo::Triangulo(const vector<Ponto *> &vertices, const Vec3 &normal,
+Triangulo::Triangulo(const vector<Ponto> &vertices, const Vec3 &normal,
 					 const Cor &cor)
 	: vertices(vertices),
 	  normal(normal),
@@ -174,8 +174,83 @@ Triangulo::~Triangulo() {}
 
 bool Triangulo::intersecta(Intersecao &intersecao)
 {
+	// triangle edge vectors
+
+	Vec3 edge1 = vertices[1] - vertices[0];
+	Vec3 edge2 = vertices[2] - vertices[0];
+	Vec3 h = pr_vet(intersecao.ray.direcao, edge2);
+
+	// check if ray is parallel
+
+	float a = pr_esc(edge1, h);
+	if (a == 0)
+		return false; // ray is parallel
+
+	// find beta coordinate
+
+	float f = 1.0 / a;
+	Vec3 s = Vec3(intersecao.ray.origem) - Vec3(vertices[0]);
+	float beta = f * pr_esc(s, h);
+	if (beta < 0.0 || beta > 1.0)
+		return false; // outside triangle
+
+	// find gamma coordinate
+
+	Vec3 q = pr_vet(s, edge1);
+	float gamma = f * pr_esc(intersecao.ray.direcao, q);
+	if (gamma < 0.0 || beta + gamma > 1.0)
+		return false; // outside triangle
+
+	// find the intersection point
+
+	float _t = f * pr_esc(edge2, q);
+	if (_t > rayTMin && _t < intersecao.t) // point intersection
+	{
+		intersecao.t = _t;
+		return true;
+	}
+	else // line intersection
+		return false;
 }
 
 bool Triangulo::INTERSECTA(const Ray &ray)
 {
+	// triangle edge vectors
+
+	Vec3 edge1 = vertices[1] - vertices[0];
+	Vec3 edge2 = vertices[2] - vertices[0];
+	Vec3 h = pr_vet(ray.direcao, edge2);
+
+	// check if ray is parallel
+
+	float a = pr_esc(edge1, h);
+	if (a == 0)
+		return false; // ray is parallel
+
+	// find beta coordinate
+
+	float f = 1.0 / a;
+	Vec3 s = Vec3(ray.origem) - Vec3(vertices[0]);
+	float beta = f * pr_esc(s, h);
+	if (beta < 0.0 || beta > 1.0)
+		return false; // outside triangle
+
+	// find gamma coordinate
+
+	Vec3 q = pr_vet(s, edge1);
+	float gamma = f * pr_esc(ray.direcao, q);
+	if (gamma < 0.0 || beta + gamma > 1.0)
+		return false; // outside triangle
+
+	// find the intersection point
+
+	float _t = f * pr_esc(edge2, q);
+	if (_t > rayTMin && _t < ray.tMax) // point intersection
+	{
+		return true;
+	}
+	else // line intersection
+	{
+		return false;
+	}
 }
