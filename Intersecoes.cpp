@@ -3,21 +3,21 @@
 
 using namespace std;
 
-formatar::formatar(){}
+formatar::formatar() {}
 
-formatar::~formatar(){}
+formatar::~formatar() {}
 
-void formatar::addForma(Forma* forma)
+void formatar::addForma(Forma *forma)
 {
 	formas.push_back(forma);
 }
 
-bool formatar::intersecta(Intersecao& intersecao)
+bool formatar::intersecta(Intersecao &intersecao)
 {
 	bool INTERSECTA = false;
-	for (vector<Forma*>::iterator iter = formas.begin();
-		iter != formas.end();
-		++iter)
+	for (vector<Forma *>::iterator iter = formas.begin();
+		 iter != formas.end();
+		 ++iter)
 	{
 		Forma *formaAtual = *iter;
 		if (formaAtual->intersecta(intersecao))
@@ -26,11 +26,11 @@ bool formatar::intersecta(Intersecao& intersecao)
 	return INTERSECTA;
 }
 
-bool formatar::INTERSECTA(const Ray& ray)
+bool formatar::INTERSECTA(const Ray &ray)
 {
-	for (vector<Forma*>::iterator iter = formas.begin();
-		iter != formas.end();
-		++iter)
+	for (vector<Forma *>::iterator iter = formas.begin();
+		 iter != formas.end();
+		 ++iter)
 	{
 		Forma *formaAtual = *iter;
 		if (formaAtual->INTERSECTA(ray))
@@ -40,16 +40,16 @@ bool formatar::INTERSECTA(const Ray& ray)
 	return false;
 }
 
+Plano::Plano(const Ponto &posicao, const Vec3 &normal,
+			 const Cor &cor) : posicao(posicao),
+							   normal(normal),
+							   cor(cor)
+{
+}
 
-Plano::Plano(const Ponto& posicao, const Vec3& normal,
-	const Cor& cor): posicao(posicao),
-	normal(normal),
-	cor(cor)
-{}
+Plano::~Plano() {}
 
-Plano::~Plano(){}
-
-bool Plano::intersecta(Intersecao& intersecao)
+bool Plano::intersecta(Intersecao &intersecao)
 {
 	// verifica se intersecta
 	float prodEscDirNor = pr_esc(intersecao.ray.direcao, normal);
@@ -59,7 +59,7 @@ bool Plano::intersecta(Intersecao& intersecao)
 	}
 
 	// acha ponto de intersecao
-	float t = pr_esc(posicao - intersecao.ray.origem, normal)/ prodEscDirNor;
+	float t = pr_esc(posicao - intersecao.ray.origem, normal) / prodEscDirNor;
 	if (t <= rayTMin || t >= intersecao.t)
 	{
 		return false;
@@ -70,7 +70,7 @@ bool Plano::intersecta(Intersecao& intersecao)
 	return true;
 }
 
-bool Plano::INTERSECTA(const Ray& ray)
+bool Plano::INTERSECTA(const Ray &ray)
 {
 	// verifica se intersecta
 	float prodEscDirNor = pr_esc(ray.direcao, normal);
@@ -87,16 +87,17 @@ bool Plano::INTERSECTA(const Ray& ray)
 	return true;
 }
 
-Esfera::Esfera(const Ponto& centro, float raio,
-	const Cor& cor)
+Esfera::Esfera(const Ponto &centro, float raio,
+			   const Cor &cor)
 	: centro(centro),
-	raio(raio),
-	cor(cor)
-{}
+	  raio(raio),
+	  cor(cor)
+{
+}
 
-Esfera::~Esfera(){}
+Esfera::~Esfera() {}
 
-bool Esfera::intersecta(Intersecao& intersecao)
+bool Esfera::intersecta(Intersecao &intersecao)
 {
 	// transformacao pra considerar o centro da esfera na origem
 	Ray localRay = intersecao.ray;
@@ -104,9 +105,9 @@ bool Esfera::intersecta(Intersecao& intersecao)
 	// calcula os coeficientes
 	float a = localRay.direcao.comp2();
 	float b = 2 * pr_esc(localRay.direcao, localRay.origem);
-	float c = localRay.origem.comp2() - sqrt(raio);
+	float c = localRay.origem.comp2() - qdd(raio);
 	// verifica se intersecta
-	float discriminante = sqrt(b) - 4 * a * c;
+	float discriminante = qdd(b) - 4 * a * c;
 	if (discriminante < 0.0f)
 	{
 		return false;
@@ -114,26 +115,29 @@ bool Esfera::intersecta(Intersecao& intersecao)
 	// acha dois pontos de intersecao t1 perto t2 longe
 	float t1 = (-b - sqrt(discriminante)) / (2 * a);
 	float t2 = (-b + sqrt(discriminante)) / (2 * a);
+
+	// verifica se há um valor de t válido
+	if ((t1 < rayTMin || t1 > intersecao.t) && (t2 < rayTMin || t2 > intersecao.t))
+	{
+		return false;
+	}
 	// verifica se t1 eh valido
 	if (t1 > rayTMin && t1 < intersecao.t)
 	{
 		intersecao.t = t1;
 	}
-	//verifica se t2 eh valido
-	else if (t2 > rayTMin && t2 < intersecao.t)
+	// verifica se t2 eh valido e menor que t1
+	if (t2 > rayTMin && t2 < intersecao.t && t2 < t1)
 	{
 		intersecao.t = t2;
 	}
-	else
-	{
-		return false;
-	}
+
 	intersecao.pForma = this;
 	intersecao.cor = cor;
 	return true;
 }
 
-bool Esfera::INTERSECTA(const Ray& ray)
+bool Esfera::INTERSECTA(const Ray &ray)
 {
 	// transformacao pra considerar o centro da esfera na origem
 	Ray localRay = ray;
@@ -141,9 +145,9 @@ bool Esfera::INTERSECTA(const Ray& ray)
 	// calcula coefcientes
 	float a = localRay.direcao.comp2();
 	float b = 2 * pr_esc(localRay.direcao, localRay.origem);
-	float c = localRay.origem.comp2() - sqrt(raio);
+	float c = localRay.origem.comp2() - qdd(raio);
 	// verifica se intersecta
-	float discriminante = sqrt(b) - 4 * a * c;
+	float discriminante = qdd(b) - 4 * a * c;
 	if (discriminante < 0.0f)
 	{
 		return false;
