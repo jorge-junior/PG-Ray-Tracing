@@ -161,3 +161,21 @@ bool Esfera::INTERSECTA(const Ray &ray)
 		return true;
 	return false;
 }
+
+Triangulo::Triangulo(const vector<Ponto *> &vertices, const Vec3 &normal,
+					 const Cor &cor)
+	: vertices(vertices),
+	  normal(normal),
+	  cor(cor)
+{
+}
+
+Triangulo::~Triangulo() {}
+
+bool Triangulo::intersecta(Intersecao &intersecao)
+{
+}
+
+bool Triangulo::INTERSECTA(const Ray &ray)
+{
+}
