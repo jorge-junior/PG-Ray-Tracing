@@ -102,8 +102,8 @@ bool Esfera::intersecta(Intersecao &intersecao)
 
 	// calcula os coeficientes
 	float a = localRay.direcao.comp2();
-	float b = 2 * pr_esc(localRay.direcao, localRay.origem);
-	float c = localRay.origem.comp2() - qdd(raio);
+	float b = 2 * pr_esc(localRay.direcao, (localRay.origem + centro));
+	float c = qdd(pr_esc(localRay.origem, centro)) - qdd(raio);
 	// verifica se intersecta
 	float discriminante = qdd(b) - 4 * a * c;
 	if (discriminante < 0.0f)
