@@ -1,5 +1,4 @@
 #include "Intersecoes.hpp"
-#include "Vetor.cpp"
 
 using namespace std;
 
@@ -40,7 +39,7 @@ bool formatar::INTERSECTA(const Ray &ray)
 	return false;
 }
 
-Plano::Plano(const Ponto &posicao, const Vec3 &normal,
+Plano::Plano(const Vec3 &posicao, const Vec3 &normal,
 			 const Cor &cor) : posicao(posicao),
 							   normal(normal),
 							   cor(cor)
@@ -87,7 +86,7 @@ bool Plano::INTERSECTA(const Ray &ray)
 	return true;
 }
 
-Esfera::Esfera(const Ponto &centro, float raio,
+Esfera::Esfera(const Vec3 &centro, float raio,
 			   const Cor &cor)
 	: centro(centro),
 	  raio(raio),
@@ -99,9 +98,8 @@ Esfera::~Esfera() {}
 
 bool Esfera::intersecta(Intersecao &intersecao)
 {
-	// transformacao pra considerar o centro da esfera na origem
 	Ray localRay = intersecao.ray;
-	localRay.origem -= centro;
+
 	// calcula os coeficientes
 	float a = localRay.direcao.comp2();
 	float b = 2 * pr_esc(localRay.direcao, localRay.origem);
@@ -162,7 +160,7 @@ bool Esfera::INTERSECTA(const Ray &ray)
 	return false;
 }
 
-Triangulo::Triangulo(const vector<Ponto> &vertices, const Vec3 &normal,
+Triangulo::Triangulo(const vector<Vec3> &vertices, const Vec3 &normal,
 					 const Cor &cor)
 	: vertices(vertices),
 	  normal(normal),

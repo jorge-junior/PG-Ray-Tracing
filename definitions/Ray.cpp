@@ -1,31 +1,33 @@
 #include <iostream>
 
 #include "Ray.hpp"
-#include "Vetor.hpp"
 
 using namespace std;
 
 Ray::Ray()
 	: origem(0.0f, 0.0f, 0.0f),
-	direcao(),
-	tMax(rayTMax)
-{}
+	  direcao(),
+	  tMax(rayTMax)
+{
+}
 
-Ray::Ray(const Ray& r)
+Ray::Ray(const Ray &r)
 	: origem(r.origem),
-	direcao(r.direcao),
-	tMax(r.tMax)
-{}
+	  direcao(r.direcao),
+	  tMax(r.tMax)
+{
+}
 
-Ray::Ray(const Ponto& origem, const Vec3& direcao, float tMax)
+Ray::Ray(const Vec3 &origem, const Vec3 &direcao, float tMax)
 	: origem(origem),
-	direcao(direcao),
-	tMax(tMax)
-{}
+	  direcao(direcao),
+	  tMax(tMax)
+{
+}
 
-Ray::~Ray(){}
+Ray::~Ray() {}
 
-Ray& Ray::operator =(const Ray& r)
+Ray &Ray::operator=(const Ray &r)
 {
 	origem = r.origem;
 	direcao = r.direcao;
@@ -33,33 +35,35 @@ Ray& Ray::operator =(const Ray& r)
 	return *this;
 }
 
-Ponto Ray::calcular(float t) const
+Vec3 Ray::calcular(float t) const
 {
 	return origem + direcao * t;
 }
 
-
 Intersecao::Intersecao()
 	: ray(),
-	t(rayTMax),
-	pForma(NULL)
-{}
+	  t(rayTMax),
+	  pForma(NULL)
+{
+}
 
-Intersecao::Intersecao(const Intersecao& i)
+Intersecao::Intersecao(const Intersecao &i)
 	: ray(i.ray),
-	t(i.t),
-	pForma(i.pForma)
-{}
+	  t(i.t),
+	  pForma(i.pForma)
+{
+}
 
-Intersecao::Intersecao(const Ray& ray)
+Intersecao::Intersecao(const Ray &ray)
 	: ray(ray),
-	t(ray.tMax),
-	pForma(NULL)
-{}
+	  t(ray.tMax),
+	  pForma(NULL)
+{
+}
 
-Intersecao::~Intersecao(){}
+Intersecao::~Intersecao() {}
 
-Intersecao& Intersecao::operator =(const Intersecao& i)
+Intersecao &Intersecao::operator=(const Intersecao &i)
 {
 	ray = i.ray;
 	t = i.t;
@@ -72,7 +76,7 @@ bool Intersecao::intersectou() const
 	return (pForma != NULL);
 }
 
-Ponto Intersecao::posicao() const
+Vec3 Intersecao::posicao() const
 {
 	return ray.calcular(t);
 }

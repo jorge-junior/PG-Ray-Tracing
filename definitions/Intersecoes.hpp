@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Vetor.hpp"
-#include "Ray.hpp"
+#include "Ray.cpp"
 
 using namespace std;
 
@@ -38,12 +37,12 @@ public:
 class Plano : public Forma
 {
 protected:
-	Ponto posicao;
+	Vec3 posicao;
 	Vec3 normal;
 	Cor cor;
 
 public:
-	Plano(const Ponto &posicao, const Vec3 &normal,
+	Plano(const Vec3 &posicao, const Vec3 &normal,
 		  const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Plano();
@@ -55,12 +54,12 @@ public:
 class Esfera : public Forma
 {
 public:
-	Ponto centro;
+	Vec3 centro;
 	float raio;
 	Cor cor;
 
 public:
-	Esfera(const Ponto &centro, float raio,
+	Esfera(const Vec3 &centro, float raio,
 		   const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Esfera();
@@ -72,12 +71,12 @@ public:
 class Triangulo : public Forma
 {
 protected:
-	vector<Ponto> vertices;
+	vector<Vec3> vertices;
 	Vec3 normal;
 	Cor cor;
 
 public:
-	Triangulo(const vector<Ponto> &vertices, const Vec3 &normal,
+	Triangulo(const vector<Vec3> &vertices, const Vec3 &normal,
 			  const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Triangulo();

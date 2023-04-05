@@ -7,16 +7,13 @@
 
 using namespace std;
 
-
 inline float qdd(float n)
 {
-	return n * n;
+    return n * n;
 }
 
-class Ponto;
-class Normal;
-
-class Vec3 {
+class Vec3
+{
 public:
     float x;
     float y;
@@ -28,64 +25,59 @@ public:
 
     Vec3(float x);
 
-
     Vec3(Vec3 const &v);
 
-    Vec3(Ponto const& p);
-
-    Vec3(Normal const& p);
-
-
     ~Vec3();
-    Vec3& operator= (Vec3 const& v);
 
-    float comp(); //comprimento
+    float comp(); // comprimento
 
-    float comp2(); //comprimento
+    float comp2(); // comprimento
 
-    Vec3 normalizar(); //normalização de vetores
+    Vec3 normalizar(); // normalização de vetores
 
-    Vec3 neg() const; //negativo
+    Vec3 neg() const; // negativo
 
-    Vec3& operator =(const Vec3& v);
-	Vec3& operator +=(const Vec3& v);
-	Vec3& operator -=(const Vec3& v);
-	Vec3& operator *=(float f);
-	Vec3& operator /=(float f);
-	Vec3 operator -() const;
+    Vec3 &operator+=(const Vec3 &v);
+    Vec3 &operator-=(const Vec3 &v);
+    Vec3 &operator*=(float f);
+    Vec3 &operator/=(float f);
+    Vec3 operator-() const;
 
     void print()
     {
-        cout << x << '/' << y << '/' << z<< endl;
+        cout << x << '/' << y << '/' << z << endl;
     }
 };
-//produto escalar
+// produto escalar
 float pr_esc(Vec3 v1, Vec3 v2);
 
-//produto vetorial
+// produto vetorial
 Vec3 pr_vet(Vec3 v1, Vec3 v2);
 
-//soma de vetores
-inline Vec3 operator + (const Vec3 & v1, const Vec3 &v2) {
+// soma de vetores
+inline Vec3 operator+(const Vec3 &v1, const Vec3 &v2)
+{
     return Vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
-//subtraçao de vetores
-inline Vec3 operator - (const Vec3 & v1, const Vec3 &v2){
+// subtraçao de vetores
+inline Vec3 operator-(const Vec3 &v1, const Vec3 &v2)
+{
     return Vec3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 }
-//multiplicaçao errada caso precise
-inline Vec3 operator * (const Vec3 & v1, const Vec3 &v2){
-    return Vec3(v1.x * v2.x, v1.y * v2.y,v1.z * v2.z);
+// multiplicaçao errada caso precise
+inline Vec3 operator*(const Vec3 &v1, const Vec3 &v2)
+{
+    return Vec3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 }
-//divisao por constante
-inline Vec3 operator / (const Vec3 & v1, float const& f) {
-    return Vec3(v1.x / f, v1.y / f,v1.z / f);
+// divisao por constante
+inline Vec3 operator/(const Vec3 &v1, float const &f)
+{
+    return Vec3(v1.x / f, v1.y / f, v1.z / f);
 }
-//multiplicaçao por constante
-inline Vec3 operator * (const Vec3 & v1, float const& f) {
-    return Vec3(v1.x * f, v1.y * f,v1.z * f);
+// multiplicaçao por constante
+inline Vec3 operator*(const Vec3 &v1, float const &f)
+{
+    return Vec3(v1.x * f, v1.y * f, v1.z * f);
 }
-
-typedef Vec3 Ponto;
 
 #endif

@@ -14,38 +14,40 @@ struct Cor
 	void clamp(float mini = 0.0f, float maxi = 1.0f);
 	void correcaoGama(float exposicao, float gama);
 
-	Cor& operator =(const Cor& c);
-	Cor& operator +=(const Cor& c);
-	Cor& operator *=(const Cor& c);
-	Cor& operator *=(float f);
+	Cor &operator=(const Cor &c);
+	Cor &operator+=(const Cor &c);
+	Cor &operator*=(const Cor &c);
+	Cor &operator*=(float f);
 };
 
-inline Cor operator +(const Cor& c1, const Cor& c2)
+Cor pr_vet(Cor c1, Cor c2);
+
+inline Cor operator+(const Cor &c1, const Cor &c2)
 {
 	return Cor(c1.r + c2.r,
-		c1.g + c2.g,
-		c1.b + c2.b);
+			   c1.g + c2.g,
+			   c1.b + c2.b);
 }
 
-inline Cor operator *(const Cor& c1, const Cor& c2)
+inline Cor operator*(const Cor &c1, const Cor &c2)
 {
 	return Cor(c1.r * c2.r,
-		c1.g * c2.g,
-		c1.b * c2.b);
+			   c1.g * c2.g,
+			   c1.b * c2.b);
 }
 
-inline Cor operator *(const Cor& c, float f)
+inline Cor operator*(const Cor &c, float f)
 {
 	return Cor(c.r * f,
-		c.g * f,
-		c.b * f);
+			   c.g * f,
+			   c.b * f);
 }
 
-inline Cor operator *(float f, const Cor& c)
+inline Cor operator*(float f, const Cor &c)
 {
 	return Cor(f * c.r,
-		f * c.g,
-		f * c.b);
+			   f * c.g,
+			   f * c.b);
 }
 
 #endif
