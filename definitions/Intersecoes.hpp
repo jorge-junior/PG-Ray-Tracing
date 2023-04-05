@@ -54,7 +54,7 @@ public:
 
 class Esfera : public Forma
 {
-protected:
+public:
 	Ponto centro;
 	float raio;
 	Cor cor;
