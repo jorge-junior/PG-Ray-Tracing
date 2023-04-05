@@ -1,5 +1,4 @@
 #include "Intersecoes.hpp"
-
 using namespace std;
 
 formatar::formatar() {}
@@ -98,38 +97,38 @@ Esfera::~Esfera() {}
 
 bool Esfera::intersecta(Intersecao &intersecao)
 {
-	Ray localRay = intersecao.ray;
+	float t0, t1, t; // solutions for t if the ray intersects
 
-	// calcula os coeficientes
-	float a = localRay.direcao.comp2();
-	float b = 2 * pr_esc(localRay.direcao, (localRay.origem + centro));
-	float c = qdd(pr_esc(localRay.origem, centro)) - qdd(raio);
-	// verifica se intersecta
-	float discriminante = qdd(b) - 4 * a * c;
-	if (discriminante < 0.0f)
-	{
+	// analytic solution
+	Vec3 L = intersecao.ray.origem - centro;
+	float a = intersecao.ray.direcao.comp2();
+	float b = 2 * pr_esc(intersecao.ray.direcao, L);
+	float c = L.comp2() - qdd(raio);
+
+	float discr = b * b - 4 * a * c;
+	if (discr < 0)
 		return false;
+	else if (discr == 0)
+		t0 = t1 = -0.5 * b / a;
+	else
+	{
+		float q = (b > 0) ? -0.5 * (b + sqrt(discr)) : -0.5 * (b - sqrt(discr));
+		t0 = q / a;
+		t1 = c / q;
 	}
-	// acha dois pontos de intersecao t1 perto t2 longe
-	float t1 = (-b - sqrt(discriminante)) / (2 * a);
-	float t2 = (-b + sqrt(discriminante)) / (2 * a);
+	if (t0 > t1)
+		swap(t0, t1);
 
-	// verifica se há um valor de t válido
-	if ((t1 < rayTMin || t1 > intersecao.t) && (t2 < rayTMin || t2 > intersecao.t))
+	if (t0 < 0)
 	{
-		return false;
-	}
-	// verifica se t1 eh valido
-	if (t1 > rayTMin && t1 < intersecao.t)
-	{
-		intersecao.t = t1;
-	}
-	// verifica se t2 eh valido e menor que t1
-	if (t2 > rayTMin && t2 < intersecao.t && t2 < t1)
-	{
-		intersecao.t = t2;
+		t0 = t1; // if t0 is negative, let's use t1 instead
+		if (t0 < 0)
+			return false; // both t0 and t1 are negative
 	}
 
+	t = t0;
+
+	intersecao.t = t;
 	intersecao.pForma = this;
 	intersecao.cor = cor;
 	return true;

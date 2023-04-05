@@ -6,10 +6,10 @@
 
 using namespace std;
 
-Cena cena = Cena(Cor(255, 255, 255), Light(Vec3(0, 0, 20), Cor(255, 255, 255)));
+Cena cena = Cena(Cor(0, 0, 0), Light(Vec3(0, 0, 20), Cor(255, 255, 255)));
 
-float ka = 0.0f;
-float kd = 1.0f;
+float ka = 0.2f;
+float kd = 0.6f;
 float ks = 0.0f;
 float eta = 1;
 
@@ -17,12 +17,12 @@ Vec3 camPos = Vec3(0, 0, 0);
 Vec3 camDir = Vec3(1, 0, 0);
 
 Vec3 vUp = Vec3(0, 0, 1);
-float camToS = 5.0f;
+float camToS = 100.0f;
 
 int Hy = 128;
 int Hx = 128;
 
-Esfera esf = Esfera(Vec3(75, 0, 0), 50, Cor(0, 0, 255));
+Esfera esf = Esfera(Vec3(200, 0, 0), 50, Cor(0, 0, 255));
 
 Cor rayCasting(const Vec3 &camPos, const Vec3 &camDir, const Vec3 &vUp, float camToS, int hy, int hx, int telaPx, int telaPy, int py, int px, Esfera e)
 {
@@ -34,11 +34,11 @@ Cor rayCasting(const Vec3 &camPos, const Vec3 &camDir, const Vec3 &vUp, float ca
     Vec3 centroTela = camPos + (camDir * camToS);
 
     // Calcula os vetores de movimentação
-    Vec3 vetorDireita = Vec3(0, 1, 0) * largurapixel;
+    Vec3 vetorDireita = -Vec3(0, 1, 0) * largurapixel;
     Vec3 vetorBaixo = Vec3(0, 0, -1) * alturapixel;
 
     // Encontra o centro do pixel superior esquerdo (0, 0)
-    Vec3 cantoSupEsq = centroTela - (Vec3(1, 0, 0) * hx) - (Vec3(0, 1, 0) * hy);
+    Vec3 cantoSupEsq = centroTela + (Vec3(0, 1, 0) * hx) - (Vec3(0, 0, -1) * hy);
     Vec3 pixelSupEsq = cantoSupEsq + 0.5 * vetorDireita + 0.5 * vetorBaixo;
 
     // Encontra o pixel (px, py) na tela
@@ -52,8 +52,9 @@ Cor rayCasting(const Vec3 &camPos, const Vec3 &camDir, const Vec3 &vUp, float ca
 
     if (intersecao)
     {
-        Vec3 ponto_intersec = raioPixelAtual.calcular(intersec.t);
-        return Phong(cena, e, camPos, ponto_intersec, ka, kd, ks, eta);
+        Vec3 ponto_intersec = intersec.posicao();
+        // return Phong(cena, e, camPos, ponto_intersec, ka, kd, ks, eta);
+        return intersec.cor;
     }
     return cena.cor;
 }

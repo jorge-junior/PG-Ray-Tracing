@@ -29,7 +29,6 @@ Cor Phong(Cena cena, Esfera obj, Vec3 cameraposicao, Vec3 p_intersec, float ka, 
 
     // Vetor normalizado da posição do objeto até a posição da luz
     Vec3 lightDir = cena.luz.posicao - p_intersec;
-    p_intersec.print();
     lightDir.normalizar();
 
     // Vetor normal do objeto
@@ -38,7 +37,6 @@ Cor Phong(Cena cena, Esfera obj, Vec3 cameraposicao, Vec3 p_intersec, float ka, 
 
     // Reflexão da luz no objeto
     Vec3 reflectDir = lightDir - (normal * pr_esc(lightDir, normal) * 2);
-    reflectDir.print();
     reflectDir.normalizar();
 
     // Intensidade da luz ambiente
@@ -48,17 +46,13 @@ Cor Phong(Cena cena, Esfera obj, Vec3 cameraposicao, Vec3 p_intersec, float ka, 
     float diffuseFactor = pr_esc(lightDir, normal);
     Cor difTempColor = pr_vet(obj.cor, cena.luz.cor);
     Cor diffuseColor = difTempColor * kd * max(diffuseFactor, 0.0f);
-    cout << "d=" << diffuseColor.r << '/' << diffuseColor.g << '/' << diffuseColor.b << endl;
 
     // Intensidade da luz especular
     float specularFactor = pow(pr_esc(reflectDir, viewDir), shininess);
-    cout << "sf=" << specularFactor << endl;
     Cor specularColor = cena.luz.cor * ks * specularFactor;
-    cout << "s=" << specularColor.r << '/' << specularColor.g << '/' << specularColor.b << endl;
 
     // Intensidade total da luz
     Cor I = ambientColor + diffuseColor + specularColor;
-    cout << "I=" << I.r << '/' << I.g << '/' << I.b << endl;
     I.clamp(0, 255);
 
     return I;
