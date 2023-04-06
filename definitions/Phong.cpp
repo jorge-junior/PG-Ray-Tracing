@@ -25,32 +25,34 @@ Cor Phong(Cena cena, Esfera obj, Vec3 cameraposicao, Vec3 p_intersec, float ka, 
 {
     // Vetor normalizado do ponto do objeto até a posição da câmera
     Vec3 viewDir = cameraposicao - p_intersec;
-    viewDir.normalizar();
+    viewDir = viewDir.normalizar();
 
-    // Vetor normalizado da posição do objeto até a posição da luz
+    // Vetor normalizado que chega da luz
     Vec3 lightDir = cena.luz.posicao - p_intersec;
-    lightDir.normalizar();
+    lightDir = lightDir.normalizar();
 
     // Vetor normal do objeto
     Vec3 normal = p_intersec - obj.centro;
-    normal.normalizar();
+    normal = normal.normalizar();
 
     // Reflexão da luz no objeto
-    Vec3 reflectDir = lightDir - (normal * pr_esc(lightDir, normal) * 2);
-    reflectDir.normalizar();
+    Vec3 reflectDir = -lightDir - (normal * pr_esc(-lightDir, normal)) * 2;
+    reflectDir = reflectDir.normalizar();
 
     // Intensidade da luz ambiente
     Cor ambientColor = cena.cor * ka;
+    ambientColor.clamp(0, 255);
 
     // Intensidade da luz difusa
     float diffuseFactor = pr_esc(lightDir, normal);
-    Cor difTempColor = pr_hd(obj.cor, cena.luz.cor);
-    difTempColor.clamp();
-    Cor diffuseColor = difTempColor * kd * max(diffuseFactor, 0.0f);
+    Cor difTempColor = obj.cor * kd * max(diffuseFactor, 0.0f);
+    Cor diffuseColor = pr_hd(difTempColor, cena.luz.cor);
+    diffuseColor.clamp(0, 255);
 
     // Intensidade da luz especular
     float specularFactor = pow(pr_esc(reflectDir, viewDir), shininess);
     Cor specularColor = cena.luz.cor * ks * specularFactor;
+    specularColor.clamp(0, 255);
 
     // Intensidade total da luz
     Cor I = ambientColor + diffuseColor + specularColor;

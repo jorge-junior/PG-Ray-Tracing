@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Cena cena = Cena(Cor(100, 100, 100), Light(Vec3(40, 400, 100), Cor(1, 255, 255)));
+Cena cena = Cena(Cor(100, 100, 100), Light(Vec3(40, 400, 100), Cor(255, 255, 255)));
 
 Vec3 camPos = Vec3(0, 0, 0);
 Vec3 camDir = Vec3(1, 0, 0);
@@ -19,7 +19,7 @@ int pixelsY = 1080;
 int Hy = pixelsY / 2;
 int Hx = pixelsX / 2;
 
-Esfera esf = Esfera(0.8f, 0.5f, 0.0f, 1, Vec3(1000, 0, 0), 900, Cor(10, 255, 0));
+Esfera esf = Esfera(0.8f, 0.5f, 0.1f, 3, Vec3(1000, 0, 0), 900, Cor(0, 0, 1));
 
 int main()
 {
@@ -39,7 +39,6 @@ int main()
             image[index + 3] = 255;        // Alpha channel
         }
     }
-    cout << image[0] << endl;
 
     // Save the image as a PNG file
     unsigned error = lodepng::encode("image.png", image, pixelsX, pixelsY);
