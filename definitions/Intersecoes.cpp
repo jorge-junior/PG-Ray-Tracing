@@ -38,8 +38,10 @@ bool formatar::INTERSECTA(const Ray &ray)
 	return false;
 }
 
-Plano::Plano(const Vec3 &posicao, const Vec3 &normal,
-			 const Cor &cor) : posicao(posicao),
+Plano::Plano(float ka, float kd, float ks, float eta,
+			 const Vec3 &posicao, const Vec3 &normal,
+			 const Cor &cor) : ka(ka), kd(kd), ks(ks), eta(eta),
+							   posicao(posicao),
 							   normal(normal),
 							   cor(cor)
 {
@@ -85,9 +87,11 @@ bool Plano::INTERSECTA(const Ray &ray)
 	return true;
 }
 
-Esfera::Esfera(const Vec3 &centro, float raio,
+Esfera::Esfera(float ka, float kd, float ks, float eta,
+			   const Vec3 &centro, float raio,
 			   const Cor &cor)
-	: centro(centro),
+	: ka(ka), kd(kd), ks(ks), eta(eta),
+	  centro(centro),
 	  raio(raio),
 	  cor(cor)
 {
@@ -159,9 +163,11 @@ bool Esfera::INTERSECTA(const Ray &ray)
 	return false;
 }
 
-Triangulo::Triangulo(const vector<Vec3> &vertices, const Vec3 &normal,
+Triangulo::Triangulo(float ka, float kd, float ks, float eta,
+					 const vector<Vec3> &vertices, const Vec3 &normal,
 					 const Cor &cor)
-	: vertices(vertices),
+	: ka(ka), kd(kd), ks(ks), eta(eta),
+	  vertices(vertices),
 	  normal(normal),
 	  cor(cor)
 {

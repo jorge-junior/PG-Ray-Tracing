@@ -37,12 +37,14 @@ public:
 class Plano : public Forma
 {
 protected:
+	float ka, kd, ks, eta;
 	Vec3 posicao;
 	Vec3 normal;
 	Cor cor;
 
 public:
-	Plano(const Vec3 &posicao, const Vec3 &normal,
+	Plano(float ka, float kd, float ks, float eta,
+		  const Vec3 &posicao, const Vec3 &normal,
 		  const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Plano();
@@ -54,12 +56,14 @@ public:
 class Esfera : public Forma
 {
 public:
+	float ka, kd, ks, eta;
 	Vec3 centro;
 	float raio;
 	Cor cor;
 
 public:
-	Esfera(const Vec3 &centro, float raio,
+	Esfera(float ka, float kd, float ks, float eta,
+		   const Vec3 &centro, float raio,
 		   const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Esfera();
@@ -71,12 +75,14 @@ public:
 class Triangulo : public Forma
 {
 protected:
+	float ka, kd, ks, eta;
 	vector<Vec3> vertices;
 	Vec3 normal;
 	Cor cor;
 
 public:
-	Triangulo(const vector<Vec3> &vertices, const Vec3 &normal,
+	Triangulo(float ka, float kd, float ks, float eta,
+			  const vector<Vec3> &vertices, const Vec3 &normal,
 			  const Cor &cor = Cor(1.0f, 1.0f, 1.0f));
 
 	virtual ~Triangulo();
