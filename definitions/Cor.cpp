@@ -27,11 +27,9 @@ void Cor::correcaoGama(float exposicao, float gama)
 	b = std::pow(b * exposicao, gama);
 }
 
-Cor pr_vet(Cor v1, Cor v2)
+Cor pr_hd(Cor v1, Cor v2)
 {
-	return Cor(v1.g * v2.b - v1.b * v2.g,
-			   v1.b * v2.r - v1.r * v2.b,
-			   v1.r * v2.g - v1.g * v2.r);
+	return Cor(v1.r * v2.r, v1.g * v2.g, v1.b * v2.b);
 }
 
 Cor &Cor::operator=(const Cor &c)

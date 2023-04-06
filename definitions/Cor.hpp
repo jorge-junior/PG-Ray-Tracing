@@ -20,7 +20,7 @@ struct Cor
 	Cor &operator*=(float f);
 };
 
-Cor pr_vet(Cor c1, Cor c2);
+Cor pr_hd(Cor c1, Cor c2);
 
 inline Cor operator+(const Cor &c1, const Cor &c2)
 {

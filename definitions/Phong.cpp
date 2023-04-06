@@ -44,7 +44,7 @@ Cor Phong(Cena cena, Esfera obj, Vec3 cameraposicao, Vec3 p_intersec, float ka, 
 
     // Intensidade da luz difusa
     float diffuseFactor = pr_esc(lightDir, normal);
-    Cor difTempColor = pr_vet(obj.cor, cena.luz.cor);
+    Cor difTempColor = pr_hd(obj.cor, cena.luz.cor);
     Cor diffuseColor = difTempColor * kd * max(diffuseFactor, 0.0f);
 
     // Intensidade da luz especular
