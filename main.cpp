@@ -19,7 +19,7 @@ int pixelsY = 1080;
 int Hy = pixelsY / 2;
 int Hx = pixelsX / 2;
 
-Esfera esf = Esfera(0.8f, 0.5f, 0.1f, 3, Vec3(1000, 0, 0), 900, Cor(0, 0, 1));
+Esfera esf = Esfera(0.5f, 0.5f, 0.1f, 3, Vec3(1000, 0, 0), 900, Cor(100, 0, 255));
 
 int main()
 {
